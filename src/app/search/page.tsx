@@ -1,21 +1,20 @@
-import { Inter } from 'next/font/google';
+import NavBar from '../components/NavBar';
 import Header from './components/Header';
-import NavBar from './components/NavBar';
 import RestaurantCard from './components/RestaurantCard';
+import SideBar from './components/SideBar';
 
-const inter = Inter({ subsets: ['latin'] });
-
-export default function Home() {
+export default function page() {
   return (
     <main className='bg-gray-100 min-h-screen w-screen'>
       <main className='max-w-screen-2xl m-auto bg-white'>
         <NavBar />
-        <main>
-          <Header />
-          <div className='py-3 px-36 mt-10 flex flex-wrap'>
+        <Header />
+        <div className='flex py-4 m-auto w-2/3 justify-between items-start'>
+          <SideBar />
+          <div className='w-5/6'>
             <RestaurantCard />
           </div>
-        </main>
+        </div>
       </main>
     </main>
   );
