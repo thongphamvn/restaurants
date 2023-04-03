@@ -1,11 +1,18 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { useState } from 'react'
 
 export default function SearchBar() {
   const router = useRouter()
-  const [location, setLocation] = useState('')
+  const searchParams = useSearchParams()
+
+  const [location, setLocation] = useState(searchParams.get('search') || '')
+  const handleBtnClick = () => {
+    const params = new URLSearchParams(searchParams)
+    params.set('search', location)
+    router.push(`/search?${params}`)
+  }
 
   return (
     <div className='text-left text-lg py-3 m-auto flex justify-center'>
@@ -19,7 +26,7 @@ export default function SearchBar() {
         }}
       />
       <button
-        onClick={() => router.push('/search')}
+        onClick={handleBtnClick}
         className='rounded bg-red-600 px-9 py-2 text-white'
       >
         {`Let's go`}

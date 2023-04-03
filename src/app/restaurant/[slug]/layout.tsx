@@ -8,12 +8,14 @@ export const metadata = {
 
 export default function RestaurantLayout({
   children,
+  params: { slug },
 }: {
   children: React.ReactNode
+  params: { slug: string }
 }) {
   return (
     <>
-      <Header />
+      <Header name={slug} />
       <div className='flex m-auto w-2/3 justify-between items-start 0 -mt-11'>
         {children}
       </div>
