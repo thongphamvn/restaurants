@@ -9,5 +9,5 @@ export default function Ratings() {
         <p className='text-reg ml-4'>600 Reviews</p>
       </div>
     </div>
-  );
+  )
 }

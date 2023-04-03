@@ -30,5 +30,5 @@ export default function Images() {
         />
       </div>
     </div>
-  );
+  )
 }

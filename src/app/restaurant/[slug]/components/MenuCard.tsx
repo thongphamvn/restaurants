@@ -7,5 +7,5 @@ export default function MenuCard() {
       </p>
       <p className='mt-7'>$80.00</p>
     </div>
-  );
+  )
 }

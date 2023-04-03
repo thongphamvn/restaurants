@@ -1,11 +1,11 @@
-'use client';
+'use client'
 
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 
 export default function SearchBar() {
-  const router = useRouter();
-  const [location, setLocation] = useState('');
+  const router = useRouter()
+  const [location, setLocation] = useState('')
 
   return (
     <div className='text-left text-lg py-3 m-auto flex justify-center'>
@@ -15,7 +15,7 @@ export default function SearchBar() {
         value={location}
         placeholder='State, city or town'
         onChange={(e) => {
-          setLocation(e.target.value);
+          setLocation(e.target.value)
         }}
       />
       <button
@@ -25,5 +25,5 @@ export default function SearchBar() {
         {`Let's go`}
       </button>
     </div>
-  );
+  )
 }

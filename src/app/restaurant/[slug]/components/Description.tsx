@@ -9,5 +9,5 @@ export default function Description() {
         experience is a simple and perfectly memorable one.
       </p>
     </div>
-  );
+  )
 }

@@ -31,5 +31,5 @@ export default function Reviews() {
         {/* REVIEW CARD */}
       </div>
     </div>
-  );
+  )
 }

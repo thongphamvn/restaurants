@@ -40,5 +40,5 @@ export default function Form() {
         opt out of receiving text messages at any time.
       </p>
     </div>
-  );
+  )
 }
