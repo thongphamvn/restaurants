@@ -1,4 +1,4 @@
-import MenuCard from './MenuCard';
+import MenuCard from './MenuCard'
 
 export default function Menu() {
   return (
@@ -12,5 +12,5 @@ export default function Menu() {
         </div>
       </div>
     </main>
-  );
+  )
 }

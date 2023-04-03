@@ -22,5 +22,5 @@ export default function RestaurantCard() {
         </div>
       </div>
     </div>
-  );
+  )
 }
