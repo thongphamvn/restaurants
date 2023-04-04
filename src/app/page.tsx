@@ -1,4 +1,10 @@
-import { Cuisine, Location, PrismaClient, Restaurant } from '@prisma/client'
+import {
+  Cuisine,
+  Location,
+  PrismaClient,
+  Restaurant,
+  Review,
+} from '@prisma/client'
 import { Inter } from 'next/font/google'
 import Header from './components/Header'
 import RestaurantCard from './components/RestaurantCard'
@@ -9,6 +15,7 @@ const prisma = new PrismaClient()
 export type RestaurantType = Restaurant & {
   cuisine: Cuisine
   location: Location
+  reviews: Review[]
 }
 
 const fetchRestaurants = async () => {
@@ -16,6 +23,7 @@ const fetchRestaurants = async () => {
     include: {
       cuisine: true,
       location: true,
+      reviews: true,
     },
   })
 

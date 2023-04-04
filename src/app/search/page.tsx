@@ -55,6 +55,7 @@ const searchRestaurants = async ({
     include: {
       cuisine: true,
       location: true,
+      reviews: true,
     },
   })
   return restaurants
