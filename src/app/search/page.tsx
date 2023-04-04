@@ -11,7 +11,7 @@ type Props = {
     price?: PRICE
   }
 }
-
+export const dynamic = 'force-dynamic'
 const prisma = new PrismaClient()
 
 const fetchLocations = async () => {
