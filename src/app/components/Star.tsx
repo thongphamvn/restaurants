@@ -21,7 +21,7 @@ export default function Star({ value }: { value: number }) {
     })
 
   return (
-    <div className='flex pb-1 h-4 items-center gap-x-0.5'>
+    <div className='flex h-4 items-center gap-x-0.5'>
       {indicators.map((src, i) => (
         <Image height={16} key={i} alt='' src={src} />
       ))}

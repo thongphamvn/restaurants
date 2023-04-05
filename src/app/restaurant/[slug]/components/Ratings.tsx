@@ -8,10 +8,8 @@ export default function Ratings({ reviews }: { reviews: Review[] }) {
   return (
     <div className='flex items-end'>
       <div className='ratings mt-2 flex items-center'>
-        <p>
-          <Star value={rating} />
-        </p>
-        <p className='text-reg ml-3'>{rating}</p>
+        <Star value={rating} />
+        <p className='text-reg ml-2'>{rating}</p>
       </div>
       <div>
         <p className='text-reg ml-4'>{reviews.length} Reviews</p>

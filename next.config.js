@@ -4,14 +4,7 @@ const nextConfig = {
     appDir: true,
   },
   images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'resizer.otstatic.com',
-        port: '',
-        pathname: 'v2',
-      },
-    ],
+    domains: ['resizer.otstatic.com'],
   },
 }
 

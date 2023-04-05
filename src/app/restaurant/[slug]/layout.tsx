@@ -17,9 +17,9 @@ export default function RestaurantLayout({
   return (
     <>
       <Header name={slug} />
-      <div className='flex m-auto w-2/3 justify-between items-start 0 -mt-11'>
-        {children}
-        <div className='w-[27%] relative'>
+      <div className='flex m-auto mx-4 justify-between items-start 0 -mt-11 gap-4'>
+        <div className='w-full'>{children}</div>
+        <div className='hidden lg:block bg-white rounded p-3 shadow'>
           <Reservation />
         </div>
       </div>

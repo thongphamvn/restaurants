@@ -15,19 +15,22 @@ export default function SearchBar() {
   }
 
   return (
-    <div className='text-left text-lg py-3 m-auto flex justify-center'>
+    <div className='text-left py-3 m-auto flex justify-center'>
       <input
-        className='rounded  mr-3 p-2 w-[450px]'
+        className='rounded w-[400px] mr-3 p-1'
         type='text'
         value={location}
         placeholder='State, city or town'
         onChange={(e) => {
           setLocation(e.target.value)
         }}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') handleBtnClick()
+        }}
       />
       <button
         onClick={handleBtnClick}
-        className='rounded bg-red-600 px-9 py-2 text-white'
+        className='rounded bg-red-600 px-4 py-2 text-white'
       >
         {`Let's go`}
       </button>

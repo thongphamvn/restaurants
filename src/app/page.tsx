@@ -36,7 +36,7 @@ export default async function Home() {
   return (
     <main className={inter.className}>
       <Header />
-      <div className='py-3 px-36 mt-10 flex flex-wrap'>
+      <div className='mx-4 mb-8 mt-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
         {restaurants.map((restaurant) => (
           <RestaurantCard key={restaurant.id} restaurant={restaurant} />
         ))}

@@ -32,7 +32,7 @@ export default async function MenuPage({
 }) {
   const items = await fetchMenuBySlug(slug)
   return (
-    <div className='bg-white w-[70%] rounded p-3 shadow'>
+    <div className='bg-white rounded p-3 shadow w-full'>
       <RestaurantNavBar slug={slug} />
       <Menu items={items} />
     </div>
