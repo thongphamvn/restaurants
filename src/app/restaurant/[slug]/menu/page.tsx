@@ -4,7 +4,7 @@ import Menu from '../components/Menu'
 import RestaurantNavBar from '../components/RestaurantNavBar'
 
 const prisma = new PrismaClient()
-
+export const dynamic = 'force-dynamic'
 const fetchMenuBySlug = async (slug: string) => {
   // fetch items by restaurant slug
   const items = await prisma.item.findMany({
