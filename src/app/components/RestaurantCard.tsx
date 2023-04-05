@@ -12,7 +12,7 @@ export default function RestaurantCard({
   const { name, main_image, price, slug, cuisine, location } = restaurant
 
   return (
-    <div className='py-3  mt-10 flex flex-wrap justify-center'>
+    <div className='py-3 mt-10 flex flex-wrap justify-center'>
       <div className='w-64 h-72 m-3 rounded overflow-hidden border cursor-pointer'>
         <Link href={`/restaurant/${slug}`}>
           <img src={main_image} alt='' className='w-full h-36' />
