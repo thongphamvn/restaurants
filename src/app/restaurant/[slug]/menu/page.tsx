@@ -1,5 +1,4 @@
 import { PrismaClient } from '@prisma/client'
-import { Metadata } from 'next'
 import Menu from '../components/Menu'
 import RestaurantNavBar from '../components/RestaurantNavBar'
 
@@ -15,15 +14,7 @@ const fetchMenuBySlug = async (slug: string) => {
     },
   })
 
-  console.log('items', items.length)
   return items
-}
-
-// FIXME: must be dynamic for each slug
-export const metadata: Metadata = {
-  title: 'menu of Name of restaurant',
-  description: '...',
-  icons: {},
 }
 
 export default async function MenuPage({
