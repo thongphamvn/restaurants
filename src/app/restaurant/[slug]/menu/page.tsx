@@ -15,6 +15,7 @@ const fetchMenuBySlug = async (slug: string) => {
     },
   })
 
+  console.log('items', items.length)
   return items
 }
 
