@@ -3,7 +3,6 @@ import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 export const dynamic = 'force-dynamic'
 const fetchMenuBySlug = async (slug: string) => {
-  // fetch items by restaurant slug
   const items = await prisma.item.findMany({
     where: {
       restaurant: {

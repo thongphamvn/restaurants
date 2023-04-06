@@ -1,5 +1,5 @@
 import { PRICE, PrismaClient } from '@prisma/client'
-import Header from './components/Header'
+import SearchBar from '../components/SearchBar'
 import RestaurantCard from './components/RestaurantCard'
 import SideBar from './components/SideBar'
 
@@ -68,14 +68,22 @@ export default async function page({ searchParams }: Props) {
 
   return (
     <>
-      <Header />
-      <div className='flex py-4 m-auto w-2/3 justify-between items-start'>
-        <SideBar locations={locations} cuisines={cuisines} />
-        <div className='w-5/6'>
-          {searchResults.map((restaurant) => (
-            <RestaurantCard key={restaurant.id} restaurant={restaurant} />
-          ))}
+      <div className='bg-gradient-to-r to-[#5f6984] from-[#0f1f47] p-2'>
+        <SearchBar />
+      </div>
+      <div className='max-w-screen-lg flex p-4 m-auto'>
+        <div className='hidden lg:block'>
+          <SideBar locations={locations} cuisines={cuisines} />
         </div>
+        {searchResults.length ? (
+          <div className='w-full grid grid-cols-1 md:grid-cols-2 gap-4'>
+            {searchResults.map((restaurant) => (
+              <RestaurantCard key={restaurant.id} restaurant={restaurant} />
+            ))}
+          </div>
+        ) : (
+          <div className='mx-auto py-8 font-light italic'>No results found</div>
+        )}
       </div>
     </>
   )

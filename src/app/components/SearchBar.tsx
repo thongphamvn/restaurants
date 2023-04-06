@@ -17,10 +17,10 @@ export default function SearchBar() {
   return (
     <div className='text-left py-3 m-auto flex justify-center'>
       <input
-        className='rounded w-[400px] mr-3 p-1'
+        className='rounded  w-[70%] max-w-md mr-3 p-2'
         type='text'
         value={location}
-        placeholder='State, city or town'
+        placeholder='Location, cuisine or restaurant'
         onChange={(e) => {
           setLocation(e.target.value)
         }}
