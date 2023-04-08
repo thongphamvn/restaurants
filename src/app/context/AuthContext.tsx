@@ -22,6 +22,8 @@ type AuthContextValue = AuthState & {
   signin: (p: SigninPayload) => void
   signup: (p: SignupPayload) => void
   isAuthenticated: boolean
+  signout: () => void
+  reset: () => void
 }
 
 const initState = {
@@ -39,6 +41,7 @@ type AuthAction =
   | { type: 'SIGNIN_SUCCESS'; payload: AuthUserResponse }
   | { type: 'SIGNIN_ERROR'; payload: string }
   | { type: 'SET_USER'; payload: AuthUserResponse }
+  | { type: 'RESET_AUTH' }
 
 function authReducer(state: AuthState, action: AuthAction): AuthState {
   switch (action.type) {
@@ -72,6 +75,8 @@ function authReducer(state: AuthState, action: AuthAction): AuthState {
       }
     case 'SIGNIN_ERROR':
       return { ...state, loading: false, error: action.payload }
+    case 'RESET_AUTH':
+      return { ...initState }
   }
 }
 
@@ -80,6 +85,8 @@ export const AuthContext = createContext<AuthContextValue>({
   isAuthenticated: false,
   signin: () => {},
   signup: () => {},
+  signout: () => {},
+  reset: () => {},
 })
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -104,6 +111,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             payload: err.response?.data.message,
           })
         })
+    } else {
+      dispatch({ type: 'RESET_AUTH' })
     }
   }, [])
 
@@ -147,6 +156,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     signup: signup.mutate,
     signin: signin.mutate,
     isAuthenticated,
+    signout: () => {
+      localStorage.removeItem('token')
+      dispatch({ type: 'RESET_AUTH' })
+    },
+    reset: () => dispatch({ type: 'RESET_AUTH' }),
   }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

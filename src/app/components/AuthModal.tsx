@@ -20,30 +20,27 @@ const style = {
   p: 4,
 }
 
+const formInit = {
+  firstName: '',
+  lastName: '',
+  phone: '',
+  city: '',
+  email: '',
+  password: '',
+}
 export default function AuthModal({ isSignin }: { isSignin: boolean }) {
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
   const handleClose = () => {
     setOpen(false)
+    reset()
+    setInputs(formInit)
   }
 
-  const [inputs, setInputs] = useState<SignupPayload>({
-    firstName: '',
-    lastName: '',
-    phone: '',
-    city: '',
-    email: '',
-    password: '',
-  })
+  const [inputs, setInputs] = useState<SignupPayload>(formInit)
 
   const [disable, setDisable] = useState(true)
-  const { error, isAuthenticated, signin, signup, loading } = useAuth()
-
-  useEffect(() => {
-    if (open && isAuthenticated) {
-      handleClose()
-    }
-  }, [isAuthenticated])
+  const { error, reset, signin, signup, loading } = useAuth()
 
   useEffect(() => {
     if (isSignin) {
