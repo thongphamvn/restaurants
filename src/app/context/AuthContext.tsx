@@ -13,7 +13,8 @@ import {
 
 type AuthState = {
   loading: boolean
-  data: User | null
+  initializing: boolean
+  user: User | null
   error: null | string
   token: string | null
 }
@@ -28,9 +29,10 @@ type AuthContextValue = AuthState & {
 
 const initState = {
   loading: false,
-  data: null,
+  user: null,
   error: null,
   token: null,
+  initializing: true,
 }
 
 type AuthAction =
@@ -42,6 +44,8 @@ type AuthAction =
   | { type: 'SIGNIN_ERROR'; payload: string }
   | { type: 'SET_USER'; payload: AuthUserResponse }
   | { type: 'RESET_AUTH' }
+  | { type: 'INIT' }
+  | { type: 'INIT_DONE'; payload: Partial<AuthUserResponse> }
 
 function authReducer(state: AuthState, action: AuthAction): AuthState {
   switch (action.type) {
@@ -51,7 +55,7 @@ function authReducer(state: AuthState, action: AuthAction): AuthState {
       return {
         ...state,
         loading: false,
-        data: action.payload.user,
+        user: action.payload.user,
         token: action.payload.token,
         error: null,
       }
@@ -59,24 +63,32 @@ function authReducer(state: AuthState, action: AuthAction): AuthState {
       return { ...state, loading: false, error: action.payload }
     case 'SIGNIN_START':
       return { ...state, loading: true }
+    case 'INIT':
+      return { ...state, initializing: true }
+    case 'INIT_DONE':
+      return {
+        ...state,
+        initializing: false,
+        ...action.payload,
+      }
     case 'SIGNIN_SUCCESS':
       return {
         ...state,
         loading: false,
-        data: action.payload.user,
-        token: action.payload.token,
+        ...action.payload,
         error: null,
       }
     case 'SET_USER':
       return {
         ...state,
+        initializing: true,
         token: action.payload.token,
-        data: action.payload.user,
+        user: action.payload.user,
       }
     case 'SIGNIN_ERROR':
       return { ...state, loading: false, error: action.payload }
     case 'RESET_AUTH':
-      return { ...initState }
+      return { ...initState, initializing: false }
   }
 }
 
@@ -93,6 +105,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [authState, dispatch] = useReducer(authReducer, initState)
 
   useEffect(() => {
+    // dispatch({ type: 'INIT' })
     const token = localStorage.getItem('token')
 
     if (token) {
@@ -103,16 +116,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           },
         })
         .then((res) => {
-          dispatch({ type: 'SET_USER', payload: { user: res.data, token } })
+          dispatch({ type: 'INIT_DONE', payload: { user: res.data, token } })
         })
         .catch((err) => {
           dispatch({
-            type: 'SIGNIN_ERROR',
-            payload: err.response?.data.message,
+            type: 'INIT_DONE',
+            payload: {},
           })
         })
     } else {
-      dispatch({ type: 'RESET_AUTH' })
+      dispatch({ type: 'INIT_DONE', payload: {} })
     }
   }, [])
 
