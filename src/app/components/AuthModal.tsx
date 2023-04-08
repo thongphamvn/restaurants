@@ -1,9 +1,12 @@
 'use client'
 
+import { SignupPayload } from '@/types'
 import Box from '@mui/material/Box'
 import Modal from '@mui/material/Modal'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useAuth } from '../context/AuthContext'
 import AuthModalInput from './AuthModalInput'
+import LoadingSpinner from './LoadingSpinner'
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -20,8 +23,11 @@ const style = {
 export default function AuthModal({ isSignin }: { isSignin: boolean }) {
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
-  const handleClose = () => setOpen(false)
-  const [inputs, setInputs] = useState({
+  const handleClose = () => {
+    setOpen(false)
+  }
+
+  const [inputs, setInputs] = useState<SignupPayload>({
     firstName: '',
     lastName: '',
     phone: '',
@@ -30,9 +36,60 @@ export default function AuthModal({ isSignin }: { isSignin: boolean }) {
     password: '',
   })
 
+  const [disable, setDisable] = useState(true)
+  const { error, isAuthenticated, signin, signup, loading } = useAuth()
+
+  useEffect(() => {
+    if (open && isAuthenticated) {
+      handleClose()
+    }
+  }, [isAuthenticated])
+
+  useEffect(() => {
+    if (isSignin) {
+      if (inputs.email && inputs.password) {
+        setDisable(false)
+      } else {
+        setDisable(true)
+      }
+    } else {
+      if (
+        inputs.firstName &&
+        inputs.lastName &&
+        inputs.phone &&
+        inputs.city &&
+        inputs.email &&
+        inputs.password
+      ) {
+        setDisable(false)
+      } else {
+        setDisable(true)
+      }
+    }
+  }, [inputs])
+
+  const handleSubmitClick = async () => {
+    if (loading) {
+      return
+    }
+
+    if (isSignin) {
+      await signin({ email: inputs.email, password: inputs.password })
+    } else {
+      await signup(inputs)
+    }
+  }
+
   const handleInputsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
     setInputs({ ...inputs, [name]: value })
+  }
+
+  const renderSubmitButton = () => {
+    if (loading) {
+      return <LoadingSpinner />
+    }
+    return isSignin ? 'Sign in' : 'Create Account'
   }
 
   return (
@@ -62,13 +119,21 @@ export default function AuthModal({ isSignin }: { isSignin: boolean }) {
               <h2 className='text-2xl font-light text-center'>
                 {isSignin ? 'Login to your account' : 'Create your account'}
               </h2>
+              <div className='h-6 text-sm font-light text-red-600 italic text-center mt-2'>
+                {error}
+              </div>
+
               <AuthModalInput
                 inputs={inputs}
                 isSignin={isSignin}
                 onInputsChange={handleInputsChange}
               />
-              <button className='uppercase bg-red-600 w-full text-white p-3 rounded text-sm mb-5 disabled:bg-gray-400'>
-                {isSignin ? 'Sign in' : 'Create Account'}
+              <button
+                onClick={handleSubmitClick}
+                disabled={disable}
+                className='uppercase bg-red-600 w-full text-white p-3 rounded text-sm mb-5 disabled:bg-gray-400 h-12 px-auto'
+              >
+                {renderSubmitButton()}
               </button>
             </div>
           </div>

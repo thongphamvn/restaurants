@@ -5,7 +5,7 @@ type JWTBody = {
   email: string
 }
 
-export async function middleware(req: NextRequest, res: NextResponse) {
+export async function middleware(req: NextRequest) {
   const token = req.headers.get('Authorization')?.replace('Bearer ', '')
   if (!token) {
     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 })

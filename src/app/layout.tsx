@@ -1,4 +1,7 @@
+import { ReactNode } from 'react'
 import NavBar from './components/NavBar'
+import { AuthProvider } from './context/AuthContext'
+import QueryProvider from './context/QueryProvider'
 import './globals.css'
 
 export const metadata = {
@@ -6,19 +9,19 @@ export const metadata = {
   description: 'Restaurant App',
 }
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang='en'>
       <body>
         <main className='bg-gray-100 min-h-screen w-screen'>
-          <main className='max-w-screen-xl m-auto bg-white'>
-            <NavBar />
-            {children}
-          </main>
+          <QueryProvider>
+            <AuthProvider>
+              <main className='max-w-screen-xl m-auto bg-white'>
+                <NavBar />
+                {children}
+              </main>
+            </AuthProvider>
+          </QueryProvider>
         </main>
       </body>
     </html>

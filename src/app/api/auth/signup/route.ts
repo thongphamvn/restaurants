@@ -23,7 +23,7 @@ const schema = Joi.object({
 
 const prisma = new PrismaClient()
 
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest, response: NextResponse) {
   const body = await request.json()
 
   const { error } = schema.validate(body)
@@ -64,5 +64,6 @@ export async function POST(request: NextRequest) {
     .setExpirationTime('24h')
     .sign(new TextEncoder().encode(process.env.JWT_SECRET))
 
-  return NextResponse.json({ token })
+  const { password, ...userWithoutPassword } = created
+  return NextResponse.json({ token: token, user: userWithoutPassword })
 }

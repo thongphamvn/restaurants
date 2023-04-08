@@ -1,11 +1,4 @@
-type Inputs = {
-  firstName: string
-  lastName: string
-  phone: string
-  city: string
-  email: string
-  password: string
-}
+import { SignupPayload } from '@/types'
 
 export default function AuthModalInput({
   inputs,
@@ -13,7 +6,7 @@ export default function AuthModalInput({
   onInputsChange,
 }: {
   isSignin: boolean
-  inputs: Inputs
+  inputs: SignupPayload
   onInputsChange: (e: React.ChangeEvent<HTMLInputElement>) => void
 }) {
   const { firstName, lastName, phone, city, email, password } = inputs

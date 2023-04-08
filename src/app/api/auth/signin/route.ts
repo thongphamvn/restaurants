@@ -10,7 +10,7 @@ const joiSchema = Joi.object({
 })
 
 const prisma = new PrismaClient()
-export async function POST(request: Request) {
+export async function POST(request: Request, response: NextResponse) {
   const body = await request.json()
   const { error } = joiSchema.validate(body)
   if (error) {
@@ -25,7 +25,7 @@ export async function POST(request: Request) {
   if (!user) {
     return NextResponse.json(
       { message: 'User or password invalid' },
-      { status: 404 }
+      { status: 401 }
     )
   }
 
@@ -33,7 +33,7 @@ export async function POST(request: Request) {
   if (!isValidPassword) {
     return NextResponse.json(
       { message: 'User or password invalid' },
-      { status: 404 }
+      { status: 401 }
     )
   }
 
@@ -44,5 +44,6 @@ export async function POST(request: Request) {
     .setExpirationTime('24h')
     .sign(new TextEncoder().encode(process.env.JWT_SECRET))
 
-  return NextResponse.json({ token })
+  const { password, ...userWithoutPassword } = user
+  return NextResponse.json({ user: userWithoutPassword, token })
 }
