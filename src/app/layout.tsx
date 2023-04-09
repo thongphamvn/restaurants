@@ -1,3 +1,4 @@
+import { Open_Sans } from 'next/font/google'
 import { ReactNode } from 'react'
 import NavBar from './components/NavBar'
 import { AuthProvider } from './context/AuthContext'
@@ -9,9 +10,15 @@ export const metadata = {
   description: 'Restaurant App',
 }
 
+const font = Open_Sans({
+  weight: '400',
+  subsets: ['latin'],
+  display: 'swap',
+})
+
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang='en'>
+    <html lang='en' className={font.className}>
       <body>
         <main className='bg-gray-100 min-h-screen w-screen'>
           <QueryProvider>
