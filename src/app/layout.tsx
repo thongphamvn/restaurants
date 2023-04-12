@@ -1,5 +1,6 @@
 import { Open_Sans } from 'next/font/google'
 import { ReactNode } from 'react'
+import 'react-datepicker/dist/react-datepicker.css'
 import NavBar from './components/NavBar'
 import { AuthProvider } from './context/AuthContext'
 import QueryProvider from './context/QueryProvider'

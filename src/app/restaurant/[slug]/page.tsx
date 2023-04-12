@@ -44,7 +44,7 @@ export default async function RestaurantDetail({
         <Description value={restaurant.description} />
         <Images value={restaurant.images} />
         <div className='lg:hidden'>
-          <Reservation />
+          <Reservation restaurant={restaurant} />
         </div>
         <Reviews reviews={restaurant.reviews} />
       </div>
