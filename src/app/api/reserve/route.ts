@@ -39,11 +39,8 @@ export async function POST(request: NextRequest) {
     where: {
       slug,
     },
-    select: {
-      id: true,
+    include: {
       tables: true,
-      open_time: true,
-      close_time: true,
     },
   })
   if (!restaurant) {
