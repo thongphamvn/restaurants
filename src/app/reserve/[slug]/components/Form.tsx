@@ -1,14 +1,15 @@
 'use client'
 
 import LoadingSpinner from '@/app/components/LoadingSpinner'
+import { AvailabilityParams, ReservationFormType } from '@/types'
 import { Restaurant } from '@prisma/client'
 import { useMutation } from '@tanstack/react-query'
-import axios from 'axios'
+import axios, { AxiosError } from 'axios'
 import { useSearchParams } from 'next/navigation'
 import { ChangeEvent, useState } from 'react'
 
 export default function Form({ restaurant }: { restaurant: Restaurant }) {
-  const [inputs, setInputs] = useState({
+  const [inputs, setInputs] = useState<ReservationFormType>({
     bookerFirstName: '',
     bookerLastName: '',
     bookerPhone: '',
@@ -16,12 +17,16 @@ export default function Form({ restaurant }: { restaurant: Restaurant }) {
     bookerOccasion: '',
     bookerRequest: '',
   })
+
   const [didBook, setDidBook] = useState(false)
   const params = useSearchParams()
   const paramsArray = [...params.entries()]
-  const paramsObject = Object.fromEntries(paramsArray)
+  const paramsObject = Object.fromEntries(paramsArray) as AvailabilityParams
 
-  const { mutate: submitReservation, isLoading } = useMutation({
+  const { mutate: submitReservation, isLoading } = useMutation<
+    unknown,
+    AxiosError
+  >({
     mutationFn: () => {
       return axios.post('/api/reserve', inputs, {
         params: {
@@ -30,8 +35,7 @@ export default function Form({ restaurant }: { restaurant: Restaurant }) {
         },
       })
     },
-
-    onSuccess: (data: any) => {
+    onSuccess: () => {
       setDidBook(true)
     },
   })
@@ -42,7 +46,8 @@ export default function Form({ restaurant }: { restaurant: Restaurant }) {
   }
 
   const btnDisabled = () => {
-    return Object.values(inputs).some((input) => input === '')
+    const { bookerEmail, bookerFirstName, bookerLastName, bookerPhone } = inputs
+    return !bookerEmail || !bookerFirstName || !bookerLastName || !bookerPhone
   }
 
   const handleSubmit = () => {

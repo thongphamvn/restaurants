@@ -1,28 +1,39 @@
-import { findAvailableTables } from '@/utils/utils'
+import { ReservationFormType, ReserveParams } from '@/types'
+import {
+  findAvailableTables,
+  getSearchParams,
+  joiValidate,
+} from '@/utils/utils'
 import { PrismaClient } from '@prisma/client'
+import Joi from 'joi'
 import { NextRequest, NextResponse } from 'next/server'
 
-type ReserveParams = {
-  day: string
-  time: string
-  partySize: string
-  slug: string
-}
-
 const prisma = new PrismaClient()
-export async function POST(request: NextRequest) {
-  const { searchParams } = new URL(request.url)
-  const body = await request.json()
-  const paramsArray = [...searchParams.entries()]
-  const paramsObject = Object.fromEntries(paramsArray) as ReserveParams
-  const { day, time, partySize, slug } = paramsObject
 
-  if (!day || !time || !partySize || !slug) {
-    return NextResponse.json(
-      { error: 'Missing required params' },
-      { status: 400 }
-    )
-  }
+const joiSchemaParams = Joi.object<ReserveParams>({
+  day: Joi.string().required(),
+  time: Joi.string().required(),
+  partySize: Joi.string().required(),
+  slug: Joi.string().required(),
+})
+
+const joiSchemaBody = Joi.object<ReservationFormType>({
+  bookerEmail: Joi.string().required(),
+  bookerFirstName: Joi.string().required(),
+  bookerLastName: Joi.string().required(),
+  bookerPhone: Joi.string().required(),
+  bookerOccasion: Joi.string().optional(),
+  bookerRequest: Joi.string().optional(),
+})
+
+export async function POST(request: NextRequest) {
+  const body = (await request.json()) as ReservationFormType
+  joiValidate(joiSchemaBody, body)
+
+  const paramsObject = getSearchParams<ReserveParams>(request.url)
+  joiValidate(joiSchemaParams, paramsObject)
+
+  const { day, time, partySize, slug } = paramsObject
 
   const restaurant = await prisma.restaurant.findUnique({
     where: {
@@ -51,11 +62,10 @@ export async function POST(request: NextRequest) {
     )
   }
 
-  const availableTables = await findAvailableTables({
+  const availableTables = await findAvailableTables(restaurant, {
     day,
     time,
     partySize,
-    slug,
   })
 
   if (!availableTables.find((a) => a.time === time)?.available) {
@@ -102,8 +112,7 @@ export async function POST(request: NextRequest) {
     bookerPhone,
     bookerOccasion,
     bookerRequest,
-  } = body || {}
-  console.log(body)
+  } = body
 
   const reservation = await prisma.booking.create({
     data: {

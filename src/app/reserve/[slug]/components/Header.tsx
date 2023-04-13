@@ -1,3 +1,4 @@
+import { AvailabilityParams } from '@/types'
 import { Restaurant } from '@prisma/client'
 import { format, parse } from 'date-fns'
 import Image from 'next/image'
@@ -9,10 +10,7 @@ export default function Header({
   partySize,
 }: {
   restaurant: Restaurant
-  day: string
-  time: string
-  partySize: string
-}) {
+} & AvailabilityParams) {
   return (
     <div>
       <h3 className='font-bold'>{`You're almost done!`}</h3>

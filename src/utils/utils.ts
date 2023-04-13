@@ -1,5 +1,8 @@
 import { times } from '@/data/time'
-import { PrismaClient, Review } from '@prisma/client'
+import { AvailabilityParams } from '@/types'
+import { PrismaClient, Restaurant, Review, Table } from '@prisma/client'
+import Joi from 'joi'
+import { NextResponse } from 'next/server'
 
 export const calculateReviewScore = (reviews: Review[]) => {
   if (reviews.length === 0) return 0
@@ -10,17 +13,12 @@ export const calculateReviewScore = (reviews: Review[]) => {
 }
 
 const prisma = new PrismaClient()
-export const findAvailableTables = async ({
-  time,
-  day,
-  slug,
-  partySize,
-}: {
-  partySize: string
-  slug: string
-  time: string
-  day: string
-}): Promise<{ time: string; available: boolean }[]> => {
+export const findAvailableTables = async (
+  restaurant: Pick<Restaurant, 'close_time' | 'open_time'> & {
+    tables: Table[]
+  },
+  { time, day, partySize }: AvailabilityParams
+): Promise<{ time: string; available: boolean }[]> => {
   const searchTimes = times.find((t) => t.time === time)?.searchTimes || []
 
   const bookings = await prisma.booking.findMany({
@@ -57,18 +55,7 @@ export const findAvailableTables = async ({
       {}
     )
 
-  const restaurant = await prisma.restaurant.findUnique({
-    where: {
-      slug,
-    },
-    select: {
-      open_time: true,
-      close_time: true,
-      tables: true,
-    },
-  })
-
-  const tables = restaurant?.tables
+  const tables = restaurant.tables
 
   const searchTimesWithTables = searchTimes.map((t) => ({
     date: new Date(day + 'T' + t),
@@ -103,4 +90,19 @@ export const findAvailableTables = async ({
     })
 
   return availability
+}
+
+export const getSearchParams = <T>(url: string): T => {
+  const { searchParams } = new URL(url)
+
+  const paramsArray = [...searchParams.entries()]
+  const paramsObject = Object.fromEntries(paramsArray)
+  return paramsObject as T
+}
+
+export const joiValidate = (schema: Joi.Schema, data: unknown) => {
+  const { error } = schema.validate(data)
+  if (error) {
+    return NextResponse.json({ message: error.message }, { status: 400 })
+  }
 }

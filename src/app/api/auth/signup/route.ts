@@ -4,14 +4,6 @@ import Joi from 'joi'
 import * as jose from 'jose'
 import { NextRequest, NextResponse } from 'next/server'
 
-export const config = {
-  api: {
-    bodyParser: {
-      sizeLimit: '1mb',
-    },
-  },
-}
-
 const schema = Joi.object({
   email: Joi.string().email().required(),
   password: Joi.string().min(6).required(),

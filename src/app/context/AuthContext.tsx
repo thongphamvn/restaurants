@@ -2,7 +2,7 @@
 
 import { AuthUserResponse, SigninPayload, SignupPayload, User } from '@/types'
 import { useMutation } from '@tanstack/react-query'
-import axios from 'axios'
+import axios, { AxiosError } from 'axios'
 import {
   ReactNode,
   createContext,
@@ -129,7 +129,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, [])
 
-  const signup = useMutation<AuthUserResponse, unknown, SignupPayload>({
+  const signup = useMutation<AuthUserResponse, AxiosError, SignupPayload>({
     mutationFn: async (p) => {
       dispatch({ type: 'SIGNUP_START' })
       const res = await axios.post(`api/auth/signup`, p)
@@ -144,7 +144,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     },
   })
 
-  const signin = useMutation<AuthUserResponse, any, SigninPayload>({
+  const signin = useMutation<AuthUserResponse, AxiosError, SigninPayload>({
     mutationFn: async ({ email, password }) => {
       dispatch({ type: 'SIGNIN_START' })
       return axios

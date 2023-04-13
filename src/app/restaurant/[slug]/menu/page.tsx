@@ -1,3 +1,4 @@
+import { SlugParams } from '@/types'
 import { PrismaClient } from '@prisma/client'
 import Menu from '../components/Menu'
 import RestaurantNavBar from '../components/RestaurantNavBar'
@@ -17,11 +18,7 @@ const fetchMenuBySlug = async (slug: string) => {
   return items
 }
 
-export default async function MenuPage({
-  params: { slug },
-}: {
-  params: { slug: string }
-}) {
+export default async function MenuPage({ params: { slug } }: SlugParams) {
   const items = await fetchMenuBySlug(slug)
   return (
     <div className='bg-white rounded p-3 shadow w-full'>

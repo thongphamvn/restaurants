@@ -1,4 +1,5 @@
 import { RestaurantType } from '@/app/page'
+import { SlugParams } from '@/types'
 import { PrismaClient } from '@prisma/client'
 import Description from './components/Description'
 import Images from './components/Images'
@@ -9,7 +10,6 @@ import Reviews from './components/Reviews'
 import Title from './components/Title'
 
 const prisma = new PrismaClient()
-
 const fetchRestaurantBySlug = async (slug: string): Promise<RestaurantType> => {
   const restaurant = await prisma.restaurant.findUnique({
     where: {
@@ -30,9 +30,7 @@ const fetchRestaurantBySlug = async (slug: string): Promise<RestaurantType> => {
 
 export default async function RestaurantDetail({
   params: { slug },
-}: {
-  params: { slug: string }
-}) {
+}: SlugParams) {
   const restaurant = await fetchRestaurantBySlug(slug)
 
   return (

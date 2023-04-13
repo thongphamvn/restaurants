@@ -1,22 +1,44 @@
-import { findAvailableTables } from '@/utils/utils'
+import { AvailabilityParams, SlugParams } from '@/types'
+import {
+  findAvailableTables,
+  getSearchParams,
+  joiValidate,
+} from '@/utils/utils'
+import { PrismaClient } from '@prisma/client'
+import Joi from 'joi'
 import { NextRequest, NextResponse } from 'next/server'
 
-export async function GET(request: NextRequest, args: any) {
-  const { searchParams } = new URL(request.url)
+const joiSchema = Joi.object<AvailabilityParams>({
+  day: Joi.string().required(),
+  time: Joi.string().required(),
+  partySize: Joi.string().required(),
+})
 
-  const paramsArray = [...searchParams.entries()]
-  const paramsObject = Object.fromEntries(paramsArray)
-  const { day, time, partySize } = paramsObject
+const prisma = new PrismaClient()
+export async function GET(request: NextRequest, { params }: SlugParams) {
+  const searchParams = getSearchParams<AvailabilityParams>(request.url)
+  joiValidate(joiSchema, searchParams)
 
-  if (!day || !time || !partySize) {
-    return new Response('Missing required query parameters', { status: 400 })
+  const { day, time, partySize } = searchParams
+
+  const restaurant = await prisma.restaurant.findUnique({
+    where: {
+      slug: params.slug,
+    },
+    select: {
+      open_time: true,
+      close_time: true,
+      tables: true,
+    },
+  })
+  if (!restaurant) {
+    return NextResponse.json({ error: 'Restaurant not found' }, { status: 404 })
   }
 
-  const availability = await findAvailableTables({
+  const availability = await findAvailableTables(restaurant, {
     day,
     time,
     partySize,
-    slug: args.params.slug,
   })
 
   return NextResponse.json({

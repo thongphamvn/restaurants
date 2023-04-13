@@ -1,4 +1,5 @@
 import { RestaurantType } from '@/app/page'
+import { SlugParams } from '@/types'
 import { PrismaClient } from '@prisma/client'
 import Header from './components/Header'
 import Reservation from './components/Reservation'
@@ -22,8 +23,7 @@ const fetchRestaurantBySlug = async (slug: string): Promise<RestaurantType> => {
   return restaurant
 }
 
-type Props = {
-  params: { slug: string }
+type Props = SlugParams & {
   children: React.ReactNode
 }
 
