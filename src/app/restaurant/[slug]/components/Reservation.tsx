@@ -150,7 +150,11 @@ export default function Reservation({
             {availableTimes.map((time) => (
               <button key={time.time} onClick={() => handleClickTime(time)}>
                 <div
-                  className={'p-3 bg-red-500 rounded text-white inline'}
+                  className={
+                    time.available
+                      ? 'p-3 bg-red-500 rounded text-white inline'
+                      : 'p-3 bg-gray-500 rounded text-white inline'
+                  }
                   key={time.time}
                 >
                   {format(
