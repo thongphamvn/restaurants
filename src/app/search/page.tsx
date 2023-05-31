@@ -2,7 +2,7 @@ import { prisma } from '@/utils'
 import { PRICE } from '@prisma/client'
 import { Suspense } from 'react'
 import SearchBar from '../components/SearchBar'
-import { RestaurantType } from '../page'
+import ListLoading from './components/ListLoading'
 import RestaurantCard from './components/RestaurantCard'
 import SideBar from './components/SideBar'
 
@@ -61,12 +61,8 @@ const searchRestaurants = async ({
   return restaurants
 }
 
-async function RestaurantList({
-  promise,
-}: {
-  promise: Promise<RestaurantType[]>
-}) {
-  const searchResults = await promise
+async function RestaurantList({ searchParams }: Props) {
+  const searchResults = await searchRestaurants(searchParams)
 
   return (
     <div>
@@ -89,8 +85,6 @@ export default async function page({ searchParams }: Props) {
     fetchCuisines(),
   ])
 
-  const searchResults = searchRestaurants(searchParams)
-
   return (
     <>
       <div className='bg-gradient-to-r to-[#5f6984] from-[#0f1f47] p-2'>
@@ -100,9 +94,12 @@ export default async function page({ searchParams }: Props) {
         <div className='hidden lg:block'>
           <SideBar locations={locations} cuisines={cuisines} />
         </div>
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense
+          key={Object.values(searchParams).join('')}
+          fallback={<ListLoading />}
+        >
           {/* @ts-expect-error Async Server Component */}
-          <RestaurantList promise={searchResults}></RestaurantList>
+          <RestaurantList searchParams={searchParams}></RestaurantList>
         </Suspense>
       </div>
     </>
