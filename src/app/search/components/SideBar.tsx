@@ -1,12 +1,33 @@
 'use client'
 
 import { Cuisine, Location, PRICE } from '@prisma/client'
+import classNames from 'classnames'
 import Image from 'next/image'
-import { usePathname, useRouter, useSearchParams } from 'next/navigation'
+import {
+  ReadonlyURLSearchParams,
+  usePathname,
+  useRouter,
+  useSearchParams,
+} from 'next/navigation'
+import { useEffect, useState } from 'react'
 
 type Props = {
   locations: Location[]
   cuisines: Cuisine[]
+}
+
+type SelectedQuery = {
+  cuisine?: string
+  region?: string
+  price?: PRICE
+}
+
+const getQueryFromSearchParams = (params: ReadonlyURLSearchParams) => {
+  const paramsObj: Record<string, string> = {}
+  for (const [key, value] of params.entries()) {
+    paramsObj[key] = value
+  }
+  return paramsObj as SelectedQuery
 }
 
 export default function SideBar({ locations, cuisines }: Props) {
@@ -14,11 +35,30 @@ export default function SideBar({ locations, cuisines }: Props) {
   const searchParams = useSearchParams()
   const pathname = usePathname()
 
+  const [query, setQuery] = useState<SelectedQuery>(
+    getQueryFromSearchParams(searchParams)
+  )
+
   const updateQuery = (key: string, value: string) => {
-    const params = new URLSearchParams(searchParams)
-    params.set(key, value)
-    router.replace(`${pathname}?${params}`)
+    setQuery({ ...query, [key]: value })
   }
+
+  useEffect(() => {
+    const params = new URLSearchParams(query)
+    router.push(`${pathname}?${params}`)
+  }, [query])
+
+  const activeItemCls = (type: keyof SelectedQuery, name: string) =>
+    classNames(
+      'font-light text-reg capitalize cursor-pointer border-l-4',
+      query[type] === name ? 'border-[#0f1f47]' : 'border-white'
+    )
+
+  const priceCls = (price: PRICE) =>
+    classNames(
+      'border w-full text-reg font-light p-2',
+      query.price === price ? 'bg-[#0f1f47] text-white' : ''
+    )
 
   return (
     <div className='w-[200px] pr-4'>
@@ -32,16 +72,9 @@ export default function SideBar({ locations, cuisines }: Props) {
             <p
               onClick={() => updateQuery('region', location.name)}
               key={location.id}
-              className={
-                'font-light text-reg capitalize cursor-pointer ' +
-                `${
-                  searchParams.get('region') === location.name
-                    ? 'font-semibold'
-                    : ''
-                }`
-              }
+              className={activeItemCls('region', location.name)}
             >
-              {location.name}
+              <span className='ml-2'>{location.name}</span>
             </p>
           ))}
         </div>
@@ -56,16 +89,9 @@ export default function SideBar({ locations, cuisines }: Props) {
             <p
               onClick={() => updateQuery('cuisine', cuisine.name)}
               key={cuisine.id}
-              className={
-                'font-light text-reg capitalize cursor-pointer ' +
-                `${
-                  searchParams.get('cuisine') === cuisine.name
-                    ? 'font-semibold'
-                    : ''
-                }`
-              }
+              className={activeItemCls('cuisine', cuisine.name)}
             >
-              {cuisine.name}
+              <span className='ml-2'>{cuisine.name}</span>
             </p>
           ))}
         </div>
@@ -77,39 +103,20 @@ export default function SideBar({ locations, cuisines }: Props) {
         </div>
         <div className='flex'>
           <button
-            className={
-              'border w-full text-reg font-light rounded-l p-2 ' +
-              `${
-                searchParams.get('price') === PRICE.CHEAP ? 'font-semibold' : ''
-              }`
-            }
+            className={priceCls(PRICE.CHEAP)}
             onClick={() => updateQuery('price', PRICE.CHEAP)}
           >
             $
           </button>
           <button
-            className={
-              'border-r border-t border-b w-full text-reg font-light p-2 ' +
-              `${
-                searchParams.get('price') === PRICE.REGULAR
-                  ? 'font-semibold'
-                  : ''
-              }`
-            }
+            className={priceCls(PRICE.REGULAR)}
             onClick={() => updateQuery('price', PRICE.REGULAR)}
           >
             $$
           </button>
           <button
             onClick={() => updateQuery('price', PRICE.EXPENSIVE)}
-            className={
-              'border-r border-t border-b w-full text-reg font-light p-2 rounded-r ' +
-              `${
-                searchParams.get('price') === PRICE.EXPENSIVE
-                  ? 'font-semibold'
-                  : ''
-              }`
-            }
+            className={priceCls(PRICE.EXPENSIVE)}
           >
             $$$
           </button>

@@ -1,4 +1,4 @@
-import { calculateReviewScore } from '@/utils/utils'
+import { calculateReviewScore } from '@/utils'
 import Image from 'next/image'
 import Link from 'next/link'
 import { RestaurantType } from '../page'
@@ -34,9 +34,9 @@ export default function RestaurantCard({
             </div>
             <div className='flex text-reg font-light capitalize'>
               <p className=' mr-3'>{cuisine.name}</p>
-              <p className='mr-3'>
+              <div className='mr-3'>
                 <Price price={price} />
-              </p>
+              </div>
               <p>{location.name}</p>
             </div>
             <p className='text-sm mt-1 font-bold'>Booked 3 times today</p>

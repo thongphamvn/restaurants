@@ -1,9 +1,8 @@
 import { SlugParams } from '@/types'
-import { PrismaClient } from '@prisma/client'
+import { prisma } from '@/utils'
 import Menu from '../components/Menu'
 import RestaurantNavBar from '../components/RestaurantNavBar'
 
-const prisma = new PrismaClient()
 export const dynamic = 'force-dynamic'
 const fetchMenuBySlug = async (slug: string) => {
   // fetch items by restaurant slug

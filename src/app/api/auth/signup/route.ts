@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client'
+import { prisma } from '@/utils'
 import bcrypt from 'bcrypt'
 import Joi from 'joi'
 import * as jose from 'jose'
@@ -12,8 +12,6 @@ const schema = Joi.object({
   city: Joi.string(),
   phone: Joi.string(),
 })
-
-const prisma = new PrismaClient()
 
 export async function POST(request: NextRequest, response: NextResponse) {
   const body = await request.json()

@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client'
+import { prisma } from '@/utils'
 import bcrypt from 'bcrypt'
 import Joi from 'joi'
 import * as jose from 'jose'
@@ -9,7 +9,6 @@ const joiSchema = Joi.object({
   password: Joi.string().required(),
 })
 
-const prisma = new PrismaClient()
 export async function POST(request: Request, response: NextResponse) {
   const body = await request.json()
   const { error } = joiSchema.validate(body)

@@ -3,8 +3,8 @@ import {
   findAvailableTables,
   getSearchParams,
   joiValidate,
-} from '@/utils/utils'
-import { PrismaClient } from '@prisma/client'
+  prisma,
+} from '@/utils'
 import Joi from 'joi'
 import { NextRequest, NextResponse } from 'next/server'
 
@@ -14,7 +14,6 @@ const joiSchema = Joi.object<AvailabilityParams>({
   partySize: Joi.string().required(),
 })
 
-const prisma = new PrismaClient()
 export async function GET(request: NextRequest, { params }: SlugParams) {
   const searchParams = getSearchParams<AvailabilityParams>(request.url)
   joiValidate(joiSchema, searchParams)

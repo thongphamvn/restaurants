@@ -1,8 +1,6 @@
-import { PrismaClient } from '@prisma/client'
+import { prisma } from '@/utils'
 import Form from './components/Form'
 import Header from './components/Header'
-
-const prisma = new PrismaClient()
 
 const fetchRestaurantBySlug = async (slug: string) => {
   const restaurant = await prisma.restaurant.findUnique({

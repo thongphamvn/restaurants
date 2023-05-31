@@ -1,6 +1,6 @@
 import { RestaurantType } from '@/app/page'
 import { SlugParams } from '@/types'
-import { PrismaClient } from '@prisma/client'
+import { prisma } from '@/utils'
 import Description from './components/Description'
 import Images from './components/Images'
 import Ratings from './components/Ratings'
@@ -9,7 +9,6 @@ import RestaurantNavBar from './components/RestaurantNavBar'
 import Reviews from './components/Reviews'
 import Title from './components/Title'
 
-const prisma = new PrismaClient()
 const fetchRestaurantBySlug = async (slug: string): Promise<RestaurantType> => {
   const restaurant = await prisma.restaurant.findUnique({
     where: {

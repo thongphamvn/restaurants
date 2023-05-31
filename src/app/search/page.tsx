@@ -1,5 +1,8 @@
-import { PRICE, PrismaClient } from '@prisma/client'
+import { prisma } from '@/utils'
+import { PRICE } from '@prisma/client'
+import { Suspense } from 'react'
 import SearchBar from '../components/SearchBar'
+import { RestaurantType } from '../page'
 import RestaurantCard from './components/RestaurantCard'
 import SideBar from './components/SideBar'
 
@@ -12,16 +15,13 @@ type Props = {
   }
 }
 export const dynamic = 'force-dynamic'
-const prisma = new PrismaClient()
 
 const fetchLocations = async () => {
-  const locations = await prisma.location.findMany()
-  return locations
+  return prisma.location.findMany()
 }
 
 const fetchCuisines = async () => {
-  const cuisines = await prisma.cuisine.findMany()
-  return cuisines
+  return prisma.cuisine.findMany()
 }
 
 const searchRestaurants = async ({
@@ -61,10 +61,35 @@ const searchRestaurants = async ({
   return restaurants
 }
 
+async function RestaurantList({
+  promise,
+}: {
+  promise: Promise<RestaurantType[]>
+}) {
+  const searchResults = await promise
+
+  return (
+    <div>
+      {searchResults.length ? (
+        <div className='w-full grid grid-cols-1 md:grid-cols-2 gap-4'>
+          {searchResults.map((restaurant) => (
+            <RestaurantCard key={restaurant.id} restaurant={restaurant} />
+          ))}
+        </div>
+      ) : (
+        <div className='mx-auto py-8 font-light italic'>No results found</div>
+      )}
+    </div>
+  )
+}
+
 export default async function page({ searchParams }: Props) {
-  const searchResults = await searchRestaurants(searchParams)
-  const locations = await fetchLocations()
-  const cuisines = await fetchCuisines()
+  const [locations, cuisines] = await Promise.all([
+    fetchLocations(),
+    fetchCuisines(),
+  ])
+
+  const searchResults = searchRestaurants(searchParams)
 
   return (
     <>
@@ -75,15 +100,10 @@ export default async function page({ searchParams }: Props) {
         <div className='hidden lg:block'>
           <SideBar locations={locations} cuisines={cuisines} />
         </div>
-        {searchResults.length ? (
-          <div className='w-full grid grid-cols-1 md:grid-cols-2 gap-4'>
-            {searchResults.map((restaurant) => (
-              <RestaurantCard key={restaurant.id} restaurant={restaurant} />
-            ))}
-          </div>
-        ) : (
-          <div className='mx-auto py-8 font-light italic'>No results found</div>
-        )}
+        <Suspense fallback={<div>Loading...</div>}>
+          {/* @ts-expect-error Async Server Component */}
+          <RestaurantList promise={searchResults}></RestaurantList>
+        </Suspense>
       </div>
     </>
   )

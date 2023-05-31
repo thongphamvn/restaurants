@@ -1,10 +1,9 @@
 import { RestaurantType } from '@/app/page'
 import { SlugParams } from '@/types'
-import { PrismaClient } from '@prisma/client'
+import { prisma } from '@/utils'
 import Header from './components/Header'
 import Reservation from './components/Reservation'
 
-const prisma = new PrismaClient()
 const fetchRestaurantBySlug = async (slug: string): Promise<RestaurantType> => {
   const restaurant = await prisma.restaurant.findUnique({
     where: {

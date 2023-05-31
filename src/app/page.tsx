@@ -1,14 +1,7 @@
-import {
-  Cuisine,
-  Location,
-  PrismaClient,
-  Restaurant,
-  Review,
-} from '@prisma/client'
+import { prisma } from '@/utils'
+import { Cuisine, Location, Restaurant, Review } from '@prisma/client'
 import Header from './components/Header'
 import RestaurantCard from './components/RestaurantCard'
-
-const prisma = new PrismaClient()
 
 export type RestaurantType = Restaurant & {
   cuisine: Cuisine

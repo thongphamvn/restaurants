@@ -3,12 +3,10 @@ import {
   findAvailableTables,
   getSearchParams,
   joiValidate,
-} from '@/utils/utils'
-import { PrismaClient } from '@prisma/client'
+  prisma,
+} from '@/utils'
 import Joi from 'joi'
 import { NextRequest, NextResponse } from 'next/server'
-
-const prisma = new PrismaClient()
 
 const joiSchemaParams = Joi.object<ReserveParams>({
   day: Joi.string().required(),

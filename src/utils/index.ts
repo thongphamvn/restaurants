@@ -12,7 +12,8 @@ export const calculateReviewScore = (reviews: Review[]) => {
   return Math.round((total / reviews.length) * inv) / inv
 }
 
-const prisma = new PrismaClient()
+export const prisma = new PrismaClient()
+
 export const findAvailableTables = async (
   restaurant: Pick<Restaurant, 'close_time' | 'open_time'> & {
     tables: Table[]

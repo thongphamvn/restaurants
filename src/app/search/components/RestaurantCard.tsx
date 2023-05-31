@@ -1,7 +1,7 @@
 import Price from '@/app/components/Price'
 import Star from '@/app/components/Star'
 import { RestaurantType } from '@/app/page'
-import { calculateReviewScore } from '@/utils/utils'
+import { calculateReviewScore } from '@/utils'
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -38,9 +38,9 @@ export default function RestaurantCard({
           </div>
           <div className='mb-9'>
             <div className='font-light flex text-reg'>
-              <p className='mr-4'>
+              <div className='mr-4'>
                 <Price price={restaurant.price} />
-              </p>
+              </div>
               <p className='mr-4 capitalize'>{restaurant.cuisine.name}</p>
               <p className='mr-4 capitalize'>{restaurant.location.name}</p>
             </div>

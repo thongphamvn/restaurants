@@ -8,6 +8,7 @@ export default function SearchBar() {
   const searchParams = useSearchParams()
 
   const [location, setLocation] = useState(searchParams.get('search') || '')
+
   const handleBtnClick = () => {
     const params = new URLSearchParams(searchParams)
     params.set('search', location)
@@ -32,7 +33,7 @@ export default function SearchBar() {
         onClick={handleBtnClick}
         className='rounded bg-red-600 px-4 py-2 text-white'
       >
-        {`Let's go`}
+        Search
       </button>
     </div>
   )
