@@ -5,7 +5,6 @@ const formatName = (name: string) => {
     .join(' ')
 }
 
-// fix me: nicer way to do this?
 export default function Header({ name }: { name: string }) {
   return (
     <div className='overflow-hidden'>
