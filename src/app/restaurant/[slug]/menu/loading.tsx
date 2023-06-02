@@ -1,9 +1,9 @@
 export default function Loading() {
   return (
-    <div className='w-full flex flex-col gap-4 '>
-      <div className='h-12 bg-gray-200 rounded'></div>
-      <div className='h-24 bg-gray-200 rounded'></div>
-      <div className='h-48 bg-gray-200 rounded'></div>
+    <div className='mx-4 mt-4 grid grid-cols-2 gap-4'>
+      {Array.from({ length: 8 }, (_, i) => i + 1).map((key) => (
+        <div key={key} className='h-36 bg-gray-200 rounded'></div>
+      ))}
     </div>
   )
 }
