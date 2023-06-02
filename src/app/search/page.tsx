@@ -5,6 +5,7 @@ import SearchBar from '../components/SearchBar'
 import ListLoading from './components/ListLoading'
 import RestaurantCard from './components/RestaurantCard'
 import SideBar from './components/SideBar'
+import SideBarLoading from './components/SideBarLoading'
 
 type Props = {
   searchParams: {
@@ -79,20 +80,27 @@ async function RestaurantList({ searchParams }: Props) {
   )
 }
 
-export default async function page({ searchParams }: Props) {
+async function SideBarFetcher() {
   const [locations, cuisines] = await Promise.all([
     fetchLocations(),
     fetchCuisines(),
   ])
 
+  return <SideBar locations={locations} cuisines={cuisines} />
+}
+
+export default function page({ searchParams }: Props) {
   return (
     <>
       <div className='bg-gradient-to-r to-[#5f6984] from-[#0f1f47] p-2'>
         <SearchBar />
       </div>
-      <div className='max-w-screen-lg flex p-4 m-auto'>
+      <div className='max-w-screen-lg flex p-4 m-auto min-h-full'>
         <div className='hidden lg:block'>
-          <SideBar locations={locations} cuisines={cuisines} />
+          <Suspense fallback={<SideBarLoading />}>
+            {/* @ts-expect-error Async Server Component */}
+            <SideBarFetcher />
+          </Suspense>
         </div>
         <Suspense
           key={Object.values(searchParams).join('')}

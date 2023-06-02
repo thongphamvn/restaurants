@@ -27,12 +27,12 @@ export default function RestaurantCard({
           alt=''
           className='w-44 rounded'
           style={{ objectFit: 'cover' }}
-          width={200}
-          height={200}
+          width={150}
+          height={150}
         />
         <div className='pl-5'>
-          <h2 className='text-3xl'>{restaurant.name}</h2>
-          <div className='flex items-start'>
+          <h2 className='text-xl'>{restaurant.name}</h2>
+          <div className='flex items-start my-1'>
             <Star value={rating} />
             <p className='ml-2 text-sm'>{renderRating()}</p>
           </div>
